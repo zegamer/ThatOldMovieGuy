@@ -22,8 +22,8 @@ import twitter
 #for docs, see https://python-twitter.readthedocs.io/en/latest/twitter.html
 
 def twitter_demo():
-    # connect to api with apikeys
-    # if you don't have apikeys, go to apps.twitter.com
+
+    # Api Keys added
     api = twitter.Api(consumer_key='OSv3zbkEOMs89vWOG8WU1sulQ',
                       consumer_secret='NRZW1VDlz8ug0lovKWwKWDTgcdYbm1Krb2hz7KxnuboHxuTZuY',
                       access_token_key='972389995083317248-W71G8021PU4IEsIYKbak7dznEhbLx8w',
