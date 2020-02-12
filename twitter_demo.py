@@ -18,15 +18,16 @@ $ pip install python-twitter
 '''
 
 import time
-import twitter #for docs, see https://python-twitter.readthedocs.io/en/latest/twitter.html
+import twitter
+#for docs, see https://python-twitter.readthedocs.io/en/latest/twitter.html
 
 def twitter_demo():
     # connect to api with apikeys
     # if you don't have apikeys, go to apps.twitter.com
-    api = twitter.Api(consumer_key='twitter consumer key',
-                      consumer_secret='twitter consumer secret',
-                      access_token_key='twitter access token key',
-                      access_token_secret='twitter access token secret')
+    api = twitter.Api(consumer_key='OSv3zbkEOMs89vWOG8WU1sulQ',
+                      consumer_secret='NRZW1VDlz8ug0lovKWwKWDTgcdYbm1Krb2hz7KxnuboHxuTZuY',
+                      access_token_key='972389995083317248-W71G8021PU4IEsIYKbak7dznEhbLx8w',
+                      access_token_secret='rMcuzSrplE1B9O0jCw9vwVAJz50xzMAA6bOAU3QEOTvXn')
 
     # get followers
     print("Getting a list of accounts I follow on Twitter...")
@@ -76,4 +77,5 @@ def twitter_demo():
     for friend_id in friend_ids:
       print("Adding ", friend_id)
       result = api.CreateListsMember(list_id=mylist.id,user_id=friend_id)
-      
+
+twitter_demo()
