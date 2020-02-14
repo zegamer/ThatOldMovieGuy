@@ -64,10 +64,10 @@ def answer_checker(quote, movie_name, correct_movie):
         print("Ehh! No.")
         return 0
 
-
-given_quote = "I'll be back"
-print(given_quote)
-correct_answer = "Terminator 2: Judgement Day"
-answer = input("Which movie is this quote from? : ")
-while answer_checker(given_quote, answer, correct_answer) != 1:
+if __name__ == '__main__':
+    given_quote = "I'll be back"
+    print(given_quote)
+    correct_answer = "Terminator 2: Judgement Day"
     answer = input("Which movie is this quote from? : ")
+    while answer_checker(given_quote, answer, correct_answer) != 1:
+        answer = input("Which movie is this quote from? : ")
