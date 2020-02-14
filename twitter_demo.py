@@ -24,10 +24,15 @@ import twitter
 def twitter_demo():
 
     # Api Keys added
-    api = twitter.Api(consumer_key='OSv3zbkEOMs89vWOG8WU1sulQ',
-                      consumer_secret='NRZW1VDlz8ug0lovKWwKWDTgcdYbm1Krb2hz7KxnuboHxuTZuY',
-                      access_token_key='972389995083317248-W71G8021PU4IEsIYKbak7dznEhbLx8w',
-                      access_token_secret='rMcuzSrplE1B9O0jCw9vwVAJz50xzMAA6bOAU3QEOTvXn')
+    # api = twitter.Api(consumer_key='OSv3zbkEOMs89vWOG8WU1sulQ',
+    #                   consumer_secret='NRZW1VDlz8ug0lovKWwKWDTgcdYbm1Krb2hz7KxnuboHxuTZuY',
+    #                   access_token_key='972389995083317248-W71G8021PU4IEsIYKbak7dznEhbLx8w',
+    #                   access_token_secret='rMcuzSrplE1B9O0jCw9vwVAJz50xzMAA6bOAU3QEOTvXn')
+    #
+    api = twitter.Api(consumer_key='77fIyHnx653Nnx0W4Iz4XRua9',
+                      consumer_secret='rG0FQNYliP2jlab2Nf0VYm83a3iC0UUFmyOetHd8aaD4nSa4aE',
+                      access_token_key='1227546694969167873-6Feip4gF0vg0DJxN38yLWCrPIVNYVt',
+                      access_token_secret='rOozbozQIqpy5JonuSrlkxq7d4NXSeIjhUCjtotVgZeHJ')
 
     # get followers
     print("Getting a list of accounts I follow on Twitter...")
@@ -35,7 +40,7 @@ def twitter_demo():
     friend_ids = [friend.id for friend in friends]
     for friend in friends:
         print("Friend: ", friend.name, friend.screen_name, friend.id)
-    
+
     # get a list of accounts that are following me
     print("Getting a list of followers from Twitter...")
     followers = api.GetFollowers()
@@ -52,30 +57,32 @@ def twitter_demo():
     # this should output: [User(ID=222060384, ScreenName=jd7h)]
 
     #tweeting
-    body = "This is a tweet. Chirp chirp. Hello world!"
+    body = "Hello There!... General Kenobi!"
     print("Posting tweet...")
-    result = api.PostUpdate(body)    
+    result = api.PostUpdate(body)
 
     # mentions:
-    body = "@jd7h My Twitter bot is working!"
+    body = "@jd7h!"
     print("Posting tweet with mention...")
     result = api.PostUpdate(body) # including the screenname (prepended by a '@') in the tweet-body is enough to create a mention.
 
     # replying to a tweet:
-    itech_tweet_id = 1178660081648492545 # tweet id of the tweet https://twitter.com/jd7h/status/1178660081648492545
-    body = "I ran your script without changing some of the input strings!"
+    tweet_id = 1178660081648492545
+    # tweet id of the tweet https://twitter.com/jd7h/status/1178660081648492545
+    body = "^^^ Hey don't look at him, he didn't type this!"
     print("Posting reply...")
-    result = api.PostUpdate(body, in_reply_to_status_id=itech_tweet_id)
+    result = api.PostUpdate(body, in_reply_to_status_id=tweet_id)
 
     # other useful stuff:
     # creating a private list
     print("Creating a private list...")
-    mylist = api.CreateList(name="My beautiful list",mode="private",description=("A secret list I created on " + time.strftime("%Y-%m-%d")))
+    # mylist = api.CreateList(name="My beautiful list",mode="private",description=("A secret list I created on " + time.strftime("%Y-%m-%d")))
 
     # Add all users from 'Following' to the new list
     print("Adding friends to the newly created list...")
-    for friend_id in friend_ids:
-      print("Adding ", friend_id)
-      result = api.CreateListsMember(list_id=mylist.id,user_id=friend_id)
+    # for friend_id in friend_ids:
+    #   print("Adding ", friend_id)
+    #   result = api.CreateListsMember(list_id=mylist.id,user_id=friend_id)
+
 
 twitter_demo()
