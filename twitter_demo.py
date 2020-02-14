@@ -57,30 +57,30 @@ def twitter_demo():
     # this should output: [User(ID=222060384, ScreenName=jd7h)]
 
     #tweeting
-    body = "Hello There!... General Kenobi!"
-    print("Posting tweet...")
-    result = api.PostUpdate(body)
+    # body = "Hello There!... General Kenobi!"
+    # print("Posting tweet...")
+    # result = api.PostUpdate(body)
 
     # mentions:
-    body = "@jd7h!"
-    print("Posting tweet with mention...")
-    result = api.PostUpdate(body) # including the screenname (prepended by a '@') in the tweet-body is enough to create a mention.
+    # body = "@jd7h!"
+    # print("Posting tweet with mention...")
+    # result = api.PostUpdate(body) # including the screenname (prepended by a '@') in the tweet-body is enough to create a mention.
 
     # THIS PART DOESNT WORK
+    # tweet id of the tweet https://twitter.com/jd7h/status/1178660081648492545
     # replying to a tweet:
     tweet_id = 1228259572378456064
-    # tweet id of the tweet https://twitter.com/jd7h/status/1178660081648492545
     body = "^^^ Hey don't look at him, he didn't type this!"
     print("Posting reply...")
     result = api.PostUpdate(body, in_reply_to_status_id=tweet_id)
 
     # other useful stuff:
     # creating a private list
-    print("Creating a private list...")
+    # print("Creating a private list...")
     # mylist = api.CreateList(name="My beautiful list",mode="private",description=("A secret list I created on " + time.strftime("%Y-%m-%d")))
 
     # Add all users from 'Following' to the new list
-    print("Adding friends to the newly created list...")
+    # print("Adding friends to the newly created list...")
     # for friend_id in friend_ids:
     #   print("Adding ", friend_id)
     #   result = api.CreateListsMember(list_id=mylist.id,user_id=friend_id)
