@@ -66,8 +66,9 @@ def twitter_demo():
     print("Posting tweet with mention...")
     result = api.PostUpdate(body) # including the screenname (prepended by a '@') in the tweet-body is enough to create a mention.
 
+    # THIS PART DOESNT WORK
     # replying to a tweet:
-    tweet_id = 1178660081648492545
+    tweet_id = 1228259572378456064
     # tweet id of the tweet https://twitter.com/jd7h/status/1178660081648492545
     body = "^^^ Hey don't look at him, he didn't type this!"
     print("Posting reply...")
