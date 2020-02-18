@@ -21,6 +21,10 @@ import time
 import twitter
 #for docs, see https://python-twitter.readthedocs.io/en/latest/twitter.html
 
+#speech generator
+import random
+
+
 def twitter_demo():
 
     # Api Keys added
@@ -57,20 +61,21 @@ def twitter_demo():
     # this should output: [User(ID=222060384, ScreenName=jd7h)]
 
     #tweeting
-    body = "Hello There!... General Kenobi!"
+    body = random.choice(["Hey there movie fans, can any of you guys figure out where this quote comes from? ", "I have this quote stuck in my head, can someone help me? ", "Can you guess where this quote came from? ", "Can someone help me find out where this quote is from? "]) + "Quote: " + "The needs of the many, outweighs the needs of the few"
     print("Posting tweet...")
     result = api.PostUpdate(body)
 
     # mentions:
-    body = "@jd7h!"
+    # body = "mnvljarg!"
     print("Posting tweet with mention...")
-    result = api.PostUpdate(body) # including the screenname (prepended by a '@') in the tweet-body is enough to create a mention.
+    # result = api.PostUpdate(body) # including the screenname (prepended by a '@') in the tweet-body is enough to create a mention.
 
     # THIS PART DOESNT WORK
     # replying to a tweet:
-    tweet_id = 1228259572378456064
+    tweet_id = 1229730717636136961
     # tweet id of the tweet https://twitter.com/jd7h/status/1178660081648492545
-    body = "^^^ Hey don't look at him, he didn't type this!"
+    # body = random.choice(['This was not what I had in mind, ', 'Not exactly bucko,', 'Nice try kiddo, ']) + random.choice(["you are welcome to try again.", "don't give up! It's not that hard.", "just think over it for a minute.", "don’t overthink it just try again."])
+    body = "Its from Star Wars, second episode I believe"
     print("Posting reply...")
     result = api.PostUpdate(body, in_reply_to_status_id=tweet_id)
 
