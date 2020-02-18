@@ -19,6 +19,7 @@ $ pip install python-twitter
 
 import time
 import twitter
+import backend1
 
 #for docs, see https://python-twitter.readthedocs.io/en/latest/twitter.html
 
@@ -29,6 +30,8 @@ api = twitter.Api(consumer_key='77fIyHnx653Nnx0W4Iz4XRua9',
                       consumer_secret='rG0FQNYliP2jlab2Nf0VYm83a3iC0UUFmyOetHd8aaD4nSa4aE',
                       access_token_key='1227546694969167873-6Feip4gF0vg0DJxN38yLWCrPIVNYVt',
                       access_token_secret='rOozbozQIqpy5JonuSrlkxq7d4NXSeIjhUCjtotVgZeHJ')
+
+movieName = "Cars"
 
 def twitter_demo():
 
@@ -73,8 +76,8 @@ def twitter_demo():
 
     # THIS PART DOESNT WORK
     # replying to a tweet:
-    tweet_id = 1229754707775827968
-    body = makeReplies(tweet_id)
+    tweet_id = 1229762492424970240
+    body = makeReplies(tweet_id, 1)
     # Add backend answer checker here
     print("Posting reply...")
     result = api.PostUpdate(body, in_reply_to_status_id=tweet_id)
@@ -109,28 +112,56 @@ def makeReplies(tweet_id, checkAnswer):
     for t in replies:
         user = t._json["user"]["screen_name"]
 
-    # If the user answer correctly
-    if checkAnswer == 1:
-        answer = random.choice(
-            ["It was indeed, " + "<movie name>", "Congratulations @" + str(user) + ", you are indeed correct", "BINGO!",
-             "Cheers to @" + str(user) + ", for solving the quote."])
+    # if no one answered
+    if user == "":
+        answer = noReplies(movieName)
 
-    # If the user answer incorrectly
-    if checkAnswer == 0:
-        answer = random.choice(
-            ['This was not what I had in mind, ', 'Not exactly bucko,', 'Nice try kiddo, ']) + random.choice(["you are welcome to try again.",
-            "don't give up! It's not that hard.", "just think over it for a minute.", "don’t overthink it just try again."])
+    else:
+        # If the user answer correctly
+        if checkAnswer == 1:
+            answer = random.choice(
+                ["It was indeed, " + movieName, "Congratulations @" + str(user) + ", you are indeed correct", "BINGO!",
+                 "Cheers to @" + str(user) + ", for solving the quote."])
 
-    # If the user replies a nonexistent movie or replies in gibberish
-    if checkAnswer == 2:
-        answer = "Sorry but I don't know this movie", "Is this an actual movie?", "That doesnt sound familiar", "I think you've made a typo"
+        if checkAnswer == 2:
+            answer = random.choice(
+                ["Close but no cigar my friend", "I think they have a similar quote, but I don't think this movie was it",
+                 "Nope! but it was close", "Some words do match but that's not exactly right"])
+
+
+        # If the user answer incorrectly
+        if checkAnswer == 3:
+            answer = random.choice(
+                ['This was not what I had in mind, ', 'Not exactly bucko,', 'Nice try kiddo, ']) + random.choice(["you are welcome to try again.",
+                "don't give up! It's not that hard.", "just think over it for a minute.", "don’t overthink it just try again."])
+
+        # If the user replies a nonexistent movie or replies in gibberish
+        if checkAnswer == 0:
+            answer = "Sorry but I don't know this movie", "Is this an actual movie?", "That doesnt sound familiar", "I think you've made a typo"
 
     return answer
 
 def generateQuoteQuestion():
     Quote_of_the_Day = random.choice(["Hey there movie fans, can any of you guys figure out where this quote comes from? ",
                                       "I have this quote stuck in my head, can someone help me? ", "Can you guess where this quote came from? ",
-                                      "Can someone help me find out where this quote is from? "]) + "Quote: " + "\"What, a swallow carrying a coconut?\" "
+                                      "Can someone help me find out where this quote is from? "]) + "Quote: " + "\"Today, we'll cancel the Apocalypse!\" "
     return Quote_of_the_Day
+
+def noReplies(movie_name):
+    answer = random.choice(["The quote was actually from a movie called ", "The movie in question was ", "The quote was from the movie", ]) \
+             + movie_name + \
+             random.choice(["Ill try to make it easier next time", "I guess it wan't as obvious as I thought"])
+    return answer
+
+def hint():
+    # get list form backend
+    randomMovie1 = random["Cars", "Lord of the Rings", "The room", "Pacific Rim", "One of the Spiderman Movies", "Avengers", "SinCity", "Pulp fiction"]
+    randomMovie2 = random["Cars", "Lord of the Rings", "The room", "Pacific Rim", "One of the Spiderman Movies", "Avengers", "SinCity", "Pulp fiction"]
+    possibleAnswers = [movieName, randomMovie1, randomMovie2]
+    hint = random.choice("Just to make it easier, heres a hint. The movie is either:",
+                         "These are several movies where the quote may have come from",
+                         "I've narrowed the movie list down to just this three:",
+                         "The quotes are most likely from one of these movies",
+                         "To make it easier for you guys, here the three most likely movies the quote came from") + movieName
 
 twitter_demo()
