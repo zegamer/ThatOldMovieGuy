@@ -12,12 +12,16 @@ api = twitter.Api(consumer_key='77fIyHnx653Nnx0W4Iz4XRua9',
                   access_token_key='1227546694969167873-6Feip4gF0vg0DJxN38yLWCrPIVNYVt',
                   access_token_secret='rOozbozQIqpy5JonuSrlkxq7d4NXSeIjhUCjtotVgZeHJ')
 
+#Timing variables
 posting_frequency = 900 #makes post every $posting_frequency$ seconds
 last_tweet_time = datetime.now() - timedelta(seconds=posting_frequency+100)
-previous_tweet_list = []
 
 reply_frequency = 60
 last_reply_check_time =datetime.now() - timedelta(seconds=reply_frequency+100)
+
+#Tweet history
+previous_tweet_list = []
+movie = []
 
 
 def twitterBot():
@@ -82,10 +86,19 @@ def makeReplies(tweet_id, checkAnswer):
     return answer
 
 def generateQuoteQuestion():
+    q = quoteGenerator()
     Quote_of_the_Day = random.choice(["Hey there movie fans, can any of you guys figure out where this quote comes from? ",
                                       "I have this quote stuck in my head, can someone help me? ", "Can you guess where this quote came from? ",
-                                      "Can someone help me find out where this quote is from? "]) + "Quote: " + "\"What, a swallow carrying a coconut?\" "
-    return Quote_of_the_Day
+                                      "Can someone help me find out where this quote is from? "]) + "Quote: " + "\""+ str(q[0]) +"\" "
+    return Quote_of_the_Day, q
 
+def quoteGenerator ():
+    quote = "Sorry to interrupt you, Mister Mayor, but there's an old American saying: When there's blood on the streets, somebody's gotta go to jail."
+    movie = "Inside Man"
+    year = "2006"
 
-twitterBot()
+    return [quote, movie, year]
+
+# twitterBot()
+
+print (generateQuoteQuestion())
