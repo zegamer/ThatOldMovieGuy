@@ -22,15 +22,24 @@ def get_all_movies_from_quote(search_term):
         phrase = json_data["docs"][i]["phrase"].translate(str.maketrans('', '', punctuation))
         if phrase.find(search_term) != -1:
             movie_list.append(title)
+
+    # pdb.set_trace()
+    print(movie_list)
     return movie_list
 
 
-# Function is fired if user gets a movie name on the list but isn't the intended one
-# OR
-# if users are unable to guess after 2-3 tries
+# Function iterates through the all the movies that have the given quote
+# and finds out if user entered any movie similar to those in the list
+def movie_matcher(movie_list, movie_name):
+    for i in movie_list:
+        if SequenceMatcher(None, i.lower(), movie_name.lower()).ratio() > 0.7:
+            return 1
+    return 0
+
+
+# Function is fired if user gets a movie name on the list but isn't the intended one or if some words match
 # It randomizes 3 movies one of which is the correct one
 def movie_hint(correct_movie, movie_list):
-    # pdb.set_trace()
     hint_list = [correct_movie]
     random_num = randrange(len(movie_list))
     while len(hint_list) <= 2:
@@ -46,28 +55,55 @@ def movie_hint(correct_movie, movie_list):
 def answer_checker(quote, movie_name, correct_movie):
     # All the print statements will be replaced by replies directly in Twitter
     movie_list = get_all_movies_from_quote(quote)
+    correctness = SequenceMatcher(None, correct_movie.lower(), movie_name.lower()).ratio()
     if correct_movie == movie_name:
-        print("Bingo!")
+        print("Bingo! You got it!")
         return 1
-    elif SequenceMatcher(None, correct_movie.lower(), movie_name.lower()).ratio() > 0.5:
-        print("Bingo! It is " + correct_movie)
+    elif correctness > 0.5:
+        print("Bingo! It is \"" + correct_movie + "\"")
         return 1
-    elif SequenceMatcher(None, correct_movie.lower(), movie_name.lower()).ratio() < 0.5:
-        print("Some words do match but that's not exactly right")
+    elif movie_matcher(movie_list, movie_name):
+        print("You're not wrong but that's not the movie I had in mind.")
         print(movie_hint(correct_movie, movie_list))
         return 2
-    elif movie_name in movie_list:
-        print("You're not wrong but that's not the movie I had in mind.")
+    elif 0.3 < correctness < 0.5:
+        print("Some words do match but that's not exactly right")
         print(movie_hint(correct_movie, movie_list))
         return 3
     else:
         print("Ehh! No.")
         return 0
 
+
+def quote_generator():
+    # identifier = "ajsdadfhkjshdf"
+    #
+    # quote_head = get("https://thesurrealist.co.uk/movie.php?word=" + identifier)
+    # quote_head = quote_head.content.decode('utf-8').lower()
+    #
+    # quote_init = "<div class=\"quote\">\n<h1>"
+    # quote_exit = "</h1>\n<div id=\"toggle2\">"
+    # quote = quote_head[quote_head.find(quote_init) + len(quote_init): quote_head.find(quote_exit)]
+    #
+    # movie_init = "</a></div>\n<div id=\"toggle\"><b>"
+    # movie_exit = "</b><br>"
+    # movie = quote_head[quote_head.find(movie_init) + len(movie_init): quote_head.find(movie_exit)]
+    #
+    # replace_init = "</b><br>\n(the missing word was '"
+    # replace_exit = "')<br><br>"
+    # replace = quote_head[quote_head.find(replace_init) + len(replace_init): quote_head.find(replace_exit)]
+    #
+    # quote = quote.replace(identifier, replace)
+
+    quote = ""
+    movie = ""
+    return quote, movie
+
+
 if __name__ == '__main__':
-    given_quote = "I'll be back"
+    given_quote, correct_answer = quote_generator()
+
     print(given_quote)
-    correct_answer = "Terminator 2: Judgement Day"
     answer = input("Which movie is this quote from? : ")
     while answer_checker(given_quote, answer, correct_answer) != 1:
         answer = input("Which movie is this quote from? : ")
