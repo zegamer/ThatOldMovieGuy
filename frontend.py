@@ -13,41 +13,52 @@ api = twitter.Api(consumer_key='77fIyHnx653Nnx0W4Iz4XRua9',
                   access_token_secret='rOozbozQIqpy5JonuSrlkxq7d4NXSeIjhUCjtotVgZeHJ')
 
 #Timing variables
-posting_frequency = 900 #makes post every $posting_frequency$ seconds
+posting_frequency = 500 #makes post every $posting_frequency$ seconds
 last_tweet_time = datetime.now() - timedelta(seconds=posting_frequency+100)
 
-reply_frequency = 60
+reply_frequency = 15
 last_reply_check_time =datetime.now() - timedelta(seconds=reply_frequency+100)
 
 #Tweet history
 previous_tweet_list = []
-movie = []
+previous_quote_list = []
+
 
 
 def twitterBot():
-    global last_tweet_time,last_reply_check_time, posting_frequency, reply_frequency, previous_tweet_list
+    global last_tweet_time,last_reply_check_time, posting_frequency, reply_frequency, previous_tweet_list, previous_quote_list
 
     while True:
         #Checks if it is time to tweet a new tweet
-        if (datetime.now()-last_tweet_time)>timedelta(seconds=posting_frequency):
-            if len(previous_tweet_list)!=0:
-
-                #Here goes through the previous tweets list and gives answers to all outstanding quotes
-                print ("give answers to previous tweets")
-
-            #Here calls funtion to get new quote
-            status = api.PostUpdate(str(generateQuoteQuestion()))
-            previous_tweet_list.append(status)
-            print (previous_tweet_list)
-            print ("Tweeted")
-
-            last_tweet_time = datetime.now()
+        # if (datetime.now()-last_tweet_time)>timedelta(seconds=posting_frequency):
+        #     if len(previous_tweet_list)!=0:
+        #
+        #         #Here goes through the previous tweets list and gives answers to all outstanding quotes
+        #         print ("give answers to previous tweets")
+        #
+        #     #Here calls funtion to get new quote
+        #     new_tweet, new_quote = generateQuoteQuestion()
+        #     status = api.PostUpdate(str(new_tweet))
+        #     previous_quote_list.append(new_quote)
+        #     previous_tweet_list.append(status)
+        #     print (previous_tweet_list)
+        #     print (previous_quote_list)
+        #     print ("Tweeted")
+        #
+        #     last_tweet_time = datetime.now()
 
         #Check for replies
         if (datetime.now() - last_reply_check_time) > timedelta(seconds=reply_frequency):
+            print("check for replies")
+            previous_tweet_list.append (api.GetStatus(1229799878068490242))
             for t in previous_tweet_list:
+                replies = getReplies(t._json["id"])
+                for r in replies:
+                    status = api.PostUpdate("@"+ str(r._json["user"]["screen_name"]) +random.choice([" Hello! You're the best!", " BANG!", " Sun"]), in_reply_to_status_id=r._json["id"])
+                    print (status)
+                    print(r._json["id"])
+                    print("check for replies")
                 #here checks for replies and answers if necessary
-                print ("check for replies")
 
             last_reply_check_time = datetime.now()
 
@@ -93,12 +104,19 @@ def generateQuoteQuestion():
     return Quote_of_the_Day, q
 
 def quoteGenerator ():
-    quote = "Sorry to interrupt you, Mister Mayor, but there's an old American saying: When there's blood on the streets, somebody's gotta go to jail."
+    quote = "When there's blood on the streets, somebody's gotta go to jail."
     movie = "Inside Man"
     year = "2006"
 
     return [quote, movie, year]
 
-# twitterBot()
+twitterBot()
+# replies = getReplies(1229794858082148352)
+# for r in replies:
+#     print (r._json["user"]["screen_name"])
 
-print (generateQuoteQuestion())
+# status = api.PostUpdate("@Joe52806384 BANG!", in_reply_to_status_id=1229796954768584705)
+# status = api.GetStatus(1229799878068490242)
+# print (status)
+
+# print (random.choice([" Hello! You're the best!","BANG!", " Sun"]))
