@@ -2,6 +2,7 @@ import twitter
 import json
 from datetime import datetime, timedelta
 import random
+import pytz
 import backend
 
 #Global variables
@@ -16,17 +17,15 @@ api = twitter.Api(consumer_key='77fIyHnx653Nnx0W4Iz4XRua9',
 posting_frequency = 500 #makes post every $posting_frequency$ seconds
 last_tweet_time = datetime.now() - timedelta(seconds=posting_frequency+100)
 
-reply_frequency = 15
+reply_frequency = 60
 last_reply_check_time =datetime.now() - timedelta(seconds=reply_frequency+100)
 
 #Tweet history
+# contains: tweet status message, quote info, tweet status (0 unanswered, 1 hint has been given), last time we checked for replies
 previous_tweet_list = []
-previous_quote_list = []
-
-
 
 def twitterBot():
-    global last_tweet_time,last_reply_check_time, posting_frequency, reply_frequency, previous_tweet_list, previous_quote_list
+    global last_tweet_time,last_reply_check_time, posting_frequency, reply_frequency, previous_tweet_list
 
     while True:
         #Checks if it is time to tweet a new tweet
@@ -39,10 +38,9 @@ def twitterBot():
         #     #Here calls funtion to get new quote
         #     new_tweet, new_quote = generateQuoteQuestion()
         #     status = api.PostUpdate(str(new_tweet))
-        #     previous_quote_list.append(new_quote)
-        #     previous_tweet_list.append(status)
+        #     q = [status, new_quote, 0, datetime.now()]
+        #     previous_tweet_list.append(q)
         #     print (previous_tweet_list)
-        #     print (previous_quote_list)
         #     print ("Tweeted")
         #
         #     last_tweet_time = datetime.now()
@@ -50,21 +48,32 @@ def twitterBot():
         #Check for replies
         if (datetime.now() - last_reply_check_time) > timedelta(seconds=reply_frequency):
             print("check for replies")
-            previous_tweet_list.append (api.GetStatus(1229799878068490242))
+            #filler message
+            previous_tweet_list.append ([api.GetStatus(1229799878068490242),"hello",0,getAwareTime(datetime.now())])
             for t in previous_tweet_list:
-                replies = getReplies(t._json["id"])
+                replies = getReplies(t[0]._json["id"])
+
                 for r in replies:
-                    status = api.PostUpdate("@"+ str(r._json["user"]["screen_name"]) +random.choice([" Hello! You're the best!", " BANG!", " Sun"]), in_reply_to_status_id=r._json["id"])
-                    print (status)
-                    print(r._json["id"])
-                    print("check for replies")
+                    tweet_time_str = r._json["created_at"]
+                    tweet_time = datetime.strptime(tweet_time_str, '%a %b %d %H:%M:%S %z %Y')
+                    if (t[3]<tweet_time):
+                        #add check if tweet is young enough
+                        status = api.PostUpdate("@"+ str(r._json["user"]["screen_name"]) +random.choice([" Hello! You're the best!", " BANG!", " Sun"]), in_reply_to_status_id=r._json["id"])
+                        print (status)
+                        print(r._json["id"])
+                        print("Sent a reply!")
                 #here checks for replies and answers if necessary
+                t[3] = getAwareTime(datetime.now())
 
             last_reply_check_time = datetime.now()
 
+#return timezone aware time stamp
+def getAwareTime(tt):
+    timezone = pytz.timezone("Europe/Amsterdam")
+    return (timezone.localize(tt))
 
 def getReplies(tweet_id):
-    replies = api.GetSearch(raw_query="q=to%3AThatOldMovieGu1&since_id="+str(tweet_id))
+    replies = api.GetSearch(raw_query="q=to%3AThatOldMovieGu1&since_id="+str(tweet_id)+"&")
     reply_list = []
     for t in replies:
         if t._json["in_reply_to_status_id"] ==tweet_id:
@@ -118,5 +127,9 @@ twitterBot()
 # status = api.PostUpdate("@Joe52806384 BANG!", in_reply_to_status_id=1229796954768584705)
 # status = api.GetStatus(1229799878068490242)
 # print (status)
+# tweet_time_str = status._json["created_at"]
+# print (tweet_time_str)
+# tweet_time = datetime.strptime(tweet_time_str, '%a %b %d %H:%M:%S %z %Y')
+# print (tweet_time)
 
 # print (random.choice([" Hello! You're the best!","BANG!", " Sun"]))
