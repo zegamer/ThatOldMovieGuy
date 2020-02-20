@@ -14,10 +14,12 @@ api = twitter.Api(consumer_key='77fIyHnx653Nnx0W4Iz4XRua9',
                   access_token_secret='rOozbozQIqpy5JonuSrlkxq7d4NXSeIjhUCjtotVgZeHJ')
 
 #Timing variables
-posting_frequency = 500 #makes post every $posting_frequency$ seconds
+posting_frequency = 120 #makes post every $posting_frequency$ seconds
 last_tweet_time = datetime.now() - timedelta(seconds=posting_frequency+100)
 
-reply_frequency = 60
+tweet_lifetime = 100  # closes tweet if its older than $posting_frequency$ seconds
+
+reply_frequency = 70 #checks for replies every $posting_frequency$ seconds
 last_reply_check_time =datetime.now() - timedelta(seconds=reply_frequency+100)
 
 #Tweet history
@@ -25,31 +27,39 @@ last_reply_check_time =datetime.now() - timedelta(seconds=reply_frequency+100)
 previous_tweet_list = []
 
 def twitterBot():
-    global last_tweet_time,last_reply_check_time, posting_frequency, reply_frequency, previous_tweet_list
+    global last_tweet_time,last_reply_check_time, posting_frequency, reply_frequency, previous_tweet_list, tweet_lifetime
 
     while True:
-        #Checks if it is time to tweet a new tweet
-        # if (datetime.now()-last_tweet_time)>timedelta(seconds=posting_frequency):
-        #     if len(previous_tweet_list)!=0:
-        #
-        #         #Here goes through the previous tweets list and gives answers to all outstanding quotes
-        #         print ("give answers to previous tweets")
-        #
-        #     #Here calls funtion to get new quote
-        #     new_tweet, new_quote = generateQuoteQuestion()
-        #     status = api.PostUpdate(str(new_tweet))
-        #     q = [status, new_quote, 0, datetime.now()]
-        #     previous_tweet_list.append(q)
-        #     print (previous_tweet_list)
-        #     print ("Tweeted")
-        #
-        #     last_tweet_time = datetime.now()
+        # Checks if it is time to tweet a new tweet
+        if (datetime.now()-last_tweet_time)>timedelta(seconds=posting_frequency):
+            if len(previous_tweet_list)!=0:
+                for t in previous_tweet_list:
+                    tweet_time_str = t[0]._json["created_at"]
+                    tweet_time = datetime.strptime(tweet_time_str, '%a %b %d %H:%M:%S %z %Y')
+                    if (tweet_time<getAwareTime(datetime.now()-timedelta(seconds = tweet_lifetime))):
+                        body = "I looked through my bookshelf and found the movie :) It was from " + str(t[1][1])
+                        result = api.PostUpdate(body, in_reply_to_status_id=t[0]._json["id"])
+                        previous_tweet_list.remove(t)
+                #Here goes through the previous tweets list and gives answers to all outstanding quotes
+                print ("give answers to previous tweets")
+
+            #Here calls funtion to get new quote
+            new_tweet, new_quote = generateQuoteQuestion()
+            status = api.PostUpdate(str(new_tweet))
+            q = [status, new_quote, 0, getAwareTime(datetime.now())]
+            previous_tweet_list.append(q)
+            print (previous_tweet_list)
+            print ("Tweeted")
+
+            last_tweet_time = datetime.now()
 
         #Check for replies
+        #Possible improvement - currently calls get replies for each tweet . Call it only once and filter out responses to each specific tweet afterwards.
+
         if (datetime.now() - last_reply_check_time) > timedelta(seconds=reply_frequency):
             print("check for replies")
             #filler message
-            previous_tweet_list.append ([api.GetStatus(1229799878068490242),"hello",0,getAwareTime(datetime.now())])
+            # previous_tweet_list.append ([api.GetStatus(1229799878068490242),"hello",0,getAwareTime(datetime.now())])
             for t in previous_tweet_list:
                 replies = getReplies(t[0]._json["id"])
 
@@ -80,6 +90,7 @@ def getReplies(tweet_id):
             reply_list.append(t)
 
     return reply_list
+
 
 def makeReplies(tweet_id, checkAnswer):
     replies = getReplies(tweet_id)
