@@ -156,4 +156,3 @@ def answer_checker(tweet_id, movie_name):
 #     else:
 #         print("Ehh! No.")
 #         return 0
-

@@ -56,27 +56,6 @@ def __get_item(reference):
         return False
 
 
-def get_quote_data_from_tweet(tweet_id):
-    """
-    Gets entire quote data from given tweet id
-
-    PARAMETERS
-    ------------
-    :param tweet_id: int
-        posted tweet's tweet id
-
-    RETURNS
-    ------------
-    :return: dictionary
-        Dictionary with (Quote, Movie, Year) as keys
-    """
-    try:
-        return __get_item("/open_tweets/"+str(tweet_id)+"/quote_id")
-    except Exception as e:
-        print(e)
-        return False
-
-
 def get_quote_data_from_id(quote_id):
     """
     Gets entire quote data from given quote id
@@ -93,6 +72,28 @@ def get_quote_data_from_id(quote_id):
     """
     try:
         return __get_item("/quotes/"+str(quote_id))
+    except Exception as e:
+        print(e)
+        return False
+
+
+def get_quote_data_from_tweet(tweet_id):
+    """
+    Gets entire quote data from given tweet id
+
+    PARAMETERS
+    ------------
+    :param tweet_id: int
+        posted tweet's tweet id
+
+    RETURNS
+    ------------
+    :return: dictionary
+        Dictionary with (Quote, Movie, Year) as keys
+    """
+    try:
+        quote_id = __get_item("/open_tweets/" + str(tweet_id) + "/quote_id")
+        return get_quote_data_from_id(quote_id)
     except Exception as e:
         print(e)
         return False
