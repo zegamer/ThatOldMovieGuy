@@ -3,8 +3,8 @@ from urllib.parse import quote_plus
 import json
 from string import punctuation
 from random import shuffle
-from difflib import SequenceMatcher
 import database as db
+from fuzzywuzzy import fuzz
 
 
 def get_all_movies_from_quote(search_term):
@@ -62,9 +62,10 @@ def movie_matcher(movie_list, movie_name):
 
     try:
         for i in movie_list:
-            if SequenceMatcher(None, i.lower(), movie_name.lower()).ratio() > 0.7:
+            if fuzz.ratio(i, movie_name) > 70:
                 return True
-    except:
+    except Exception as e:
+        print(e)
         return False
 
 
@@ -121,38 +122,14 @@ def answer_checker(tweet_id, movie_name):
     quote = quote_data['Quote']
     correct_movie = quote_data['Movie']
     movie_list = get_all_movies_from_quote(quote)
-    correctness = SequenceMatcher(None, correct_movie.lower(), movie_name.lower()).ratio()
+    correctness = fuzz.ratio(correct_movie, movie_name)
     if correct_movie == movie_name:
         return 1
-    elif correctness > 0.5:
+    elif correctness >= 70:
         return 2, correct_movie
     elif movie_matcher(movie_list, movie_name):
         return 3
-    elif 0.3 < correctness < 0.5:
+    elif 40 < correctness < 70:
         return 4
     else:
         return 0
-
-
-# (IGNORE) Previous edits
-# def answer_checker(quote, movie_name, correct_movie):
-#     # All the print statements will be replaced by replies directly in Twitter
-#     movie_list = get_all_movies_from_quote(quote)
-#     correctness = SequenceMatcher(None, correct_movie.lower(), movie_name.lower()).ratio()
-#     if correct_movie == movie_name:
-#         print("Bingo! You got it!")
-#         return 1
-#     elif correctness > 0.5:
-#         print("Bingo! It is \"" + correct_movie + "\"")
-#         return 1
-#     elif movie_matcher(movie_list, movie_name):
-#         print("You're not wrong but that's not the movie I had in mind.")
-#         print(movie_hint(correct_movie, movie_list))
-#         return 2
-#     elif 0.3 < correctness < 0.5:
-#         print("Some words do match but that's not exactly right")
-#         print(movie_hint(correct_movie, movie_list))
-#         return 3
-#     else:
-#         print("Ehh! No.")
-#         return 0
