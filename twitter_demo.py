@@ -9,7 +9,7 @@ written in Python3 by Judith van Stegeren, @jd7h
 '''
 before running the script, do this:
 1. create a virtual environment
-$ python -m venv venv
+$ python -m venv venv 
 $ source venv/bin/activate
 2. install the dependencies
 $ pip install python-twitter
@@ -19,7 +19,7 @@ $ pip install python-twitter
 
 import time
 import twitter
-import backend1
+import backend2
 
 #for docs, see https://python-twitter.readthedocs.io/en/latest/twitter.html
 
@@ -31,7 +31,11 @@ api = twitter.Api(consumer_key='77fIyHnx653Nnx0W4Iz4XRua9',
                       access_token_key='1227546694969167873-6Feip4gF0vg0DJxN38yLWCrPIVNYVt',
                       access_token_secret='rOozbozQIqpy5JonuSrlkxq7d4NXSeIjhUCjtotVgZeHJ')
 
-movieName = "Cars"
+movieName = "The Shining"
+quote = "\"Here's Johnny\""
+
+correctAnswer = "The Shining"
+
 
 def twitter_demo():
 
@@ -76,9 +80,11 @@ def twitter_demo():
 
     # THIS PART DOESNT WORK
     # replying to a tweet:
-    tweet_id = 1229762492424970240
-    body = makeReplies(tweet_id, 1)
+    tweet_id = 1230502741002375170
+
     # Add backend answer checker here
+    # body = makeReply(tweet_id, getReplies(tweet_id))
+    body = answerChecker(tweet_id, backend2.answer_checker(tweet_id, correctAnswer))
     print("Posting reply...")
     result = api.PostUpdate(body, in_reply_to_status_id=tweet_id)
 
@@ -106,7 +112,7 @@ def getReplies(tweet_id):
     return reply_list
 
 
-def makeReplies(tweet_id, checkAnswer):
+def answerChecker(tweet_id, checkAnswer):
     replies = getReplies(tweet_id)
     user = ""
     for t in replies:
@@ -114,13 +120,13 @@ def makeReplies(tweet_id, checkAnswer):
 
     # if no one answered
     if user == "":
-        answer = noReplies(movieName)
+        answer = noReplies(correctAnswer)
 
     else:
         # If the user answer correctly
         if checkAnswer == 1:
             answer = random.choice(
-                ["It was indeed, " + movieName, "Congratulations @" + str(user) + ", you are indeed correct", "BINGO!",
+                ["It was indeed, " + correctAnswer, "Congratulations @" + str(user) + ", you are indeed correct", "BINGO!",
                  "Cheers to @" + str(user) + ", for solving the quote."])
 
         if checkAnswer == 2:
@@ -141,10 +147,14 @@ def makeReplies(tweet_id, checkAnswer):
 
     return answer
 
+# def makeReply (tweet_id, user_answer):
+
+
+
 def generateQuoteQuestion():
     Quote_of_the_Day = random.choice(["Hey there movie fans, can any of you guys figure out where this quote comes from? ",
                                       "I have this quote stuck in my head, can someone help me? ", "Can you guess where this quote came from? ",
-                                      "Can someone help me find out where this quote is from? "]) + "Quote: " + "\"Today, we'll cancel the Apocalypse!\" "
+                                      "Can someone help me find out where this quote is from? "]) + "Quote: " + quote
     return Quote_of_the_Day
 
 def noReplies(movie_name):
@@ -157,11 +167,12 @@ def hint():
     # get list form backend
     randomMovie1 = random["Cars", "Lord of the Rings", "The room", "Pacific Rim", "One of the Spiderman Movies", "Avengers", "SinCity", "Pulp fiction"]
     randomMovie2 = random["Cars", "Lord of the Rings", "The room", "Pacific Rim", "One of the Spiderman Movies", "Avengers", "SinCity", "Pulp fiction"]
-    possibleAnswers = [movieName, randomMovie1, randomMovie2]
+    possibleAnswers = movieName + randomMovie1 + randomMovie2
     hint = random.choice("Just to make it easier, heres a hint. The movie is either:",
                          "These are several movies where the quote may have come from",
                          "I've narrowed the movie list down to just this three:",
                          "The quotes are most likely from one of these movies",
-                         "To make it easier for you guys, here the three most likely movies the quote came from") + movieName
+                         "To make it easier for you guys, here the three most likely movies the quote came from") + possibleAnswers
+    return hint
 
 twitter_demo()
