@@ -110,7 +110,7 @@ def get_random_quote_data():
     try:
         all_quotes = __get_item('quotes')
         random_num = randrange(len(all_quotes))
-        return all_quotes[random_num + 1]
+        return all_quotes[random_num + 1], random_num + 1
     except Exception as e:
         print(e)
         return False
