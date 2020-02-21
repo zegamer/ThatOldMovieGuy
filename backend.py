@@ -111,7 +111,7 @@ def answer_checker(tweet_id, movie_name):
     ------------
     :return: int, str
         Returns (1) if user enters exact movie name
-        Returns (2, correct movie name) if movie name is 50% true
+        Returns (2) if movie name is 50% true
         Returns (3) if quote exists in another movie
         Returns (4) if some words match but isn't correct
         Returns (0) if it is entirely wrong
@@ -125,7 +125,7 @@ def answer_checker(tweet_id, movie_name):
     if correct_movie == movie_name:
         return 1
     elif correctness > 0.5:
-        return 2, correct_movie
+        return 2
     elif movie_matcher(movie_list, movie_name):
         return 3
     elif 0.3 < correctness < 0.5:
