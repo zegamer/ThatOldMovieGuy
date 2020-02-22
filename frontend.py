@@ -30,7 +30,7 @@ last_tweet_time = datetime.now() - timedelta(seconds=posting_frequency+100)
 
 tweet_lifetime = 180  # closes tweet if its older than $posting_frequency$ seconds
 
-reply_frequency = 25 #checks for replies every $posting_frequency$ seconds
+reply_frequency = 40 #checks for replies every $posting_frequency$ seconds
 last_reply_check_time =datetime.now() - timedelta(seconds=reply_frequency+100)
 
 #Tweet history
