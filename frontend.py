@@ -6,6 +6,7 @@ import pytz
 import backend
 from configparser import ConfigParser
 import database as db
+# import pdb
 
 #Global variables
 
@@ -41,8 +42,31 @@ def twitterBot():
 
     while True:
         # Checks if it is time to tweet a new tweet
+
         if (datetime.now()-last_tweet_time)>timedelta(seconds=posting_frequency):
             #respond to previous tweets
+            open_tweets = db.get_open_tweets()
+            if len(open_tweets)!=0:
+                for i in open_tweets:
+                    print(i)
+                    # open_tweet_time = datetime.strptime(open_tweets[i]["time_posted"], '%Y-%m-%d %H:%M:%S')
+                    print (open_tweets[i]["time_posted"])
+                    open_tweet_time = datetime.fromisoformat(open_tweets[i]["time_posted"])
+                    # print (open_tweet_time)
+                    # print (open_tweets[i]["time_posted"])
+                    if (open_tweet_time<getAwareTime(datetime.now()-timedelta(seconds=tweet_lifetime))):
+                        quote_data = db.get_quote_data_from_tweet(i)
+                        movie = quote_data['Movie']
+                        body = noReplies(movie)
+                        print (body)
+                        result = api.PostUpdate(body, in_reply_to_status_id=i)
+                        db.change_tweet_open_status(i)
+                        print ("Ŗemoved tweet")
+
+            # print (type (ot))
+            # for t in ot:
+            #     print (ot[t])
+            #     print (type(t))
             # if len(previous_tweet_list)!=0:
             #     for t in previous_tweet_list:
             #         tweet_time_str = t[0]._json["created_at"]
@@ -73,31 +97,36 @@ def twitterBot():
             last_tweet_time = datetime.now()
 
         #Check for replies
+
         #Possible improvement - currently calls get replies for each tweet . Call it only once and filter out responses to each specific tweet afterwards.
         #
         if (datetime.now() - last_reply_check_time) > timedelta(seconds=reply_frequency):
             print("check for replies")
             #filler message
-            previous_tweet_list.append ([api.GetStatus(1230950865370066945),"hello",0,getAwareTime(datetime.now())])
-            for t in previous_tweet_list:
-                replies = getReplies(t[0]._json["id"])
+            # previous_tweet_list.append ([api.GetStatus(1230969409587556352),"hello",0,getAwareTime(datetime.now())])
+            open_tweets = db.get_open_tweets()
+            if len(open_tweets) != 0:
+                for t in open_tweets:
+                    replies = getReplies(t)
+                    print (t)
+                    print (replies)
+                    for r in replies:
+                        tweet_time_str = r._json["created_at"]
+                        tweet_time = datetime.strptime(tweet_time_str, '%a %b %d %H:%M:%S %z %Y')
+                        if (open_tweets[t]["last_modified"]<tweet_time):
+                            #add check if tweet is young enough
+                            # status = api.PostUpdate("@"+ str(r._json["user"]["screen_name"]) +random.choice([" Hello! You're the best!", " BANG!", " Sun"]), in_reply_to_status_id=r._json["id"])
+                            quote_data = db.get_quote_data_from_tweet(t)
+                            movie = quote_data['Movie']
 
-                for r in replies:
-                    tweet_time_str = r._json["created_at"]
-                    tweet_time = datetime.strptime(tweet_time_str, '%a %b %d %H:%M:%S %z %Y')
-                    # if (t[3]<tweet_time):
-                    #add check if tweet is young enough
-                    # status = api.PostUpdate("@"+ str(r._json["user"]["screen_name"]) +random.choice([" Hello! You're the best!", " BANG!", " Sun"]), in_reply_to_status_id=r._json["id"])
-                    quote_data = db.get_quote_data_from_tweet(t._json["id"])
-                    quote = quote_data['Quote']
+                            print (str(r._json["text"]).replace("@ThatOldMovieGu1 ","").strip())
 
-                    answer = answerGenerator(quote, r._json["user"]["screen_name"],backend.answer_checker(t._json["id"], r._json["text"]))
-                    status = api.PostUpdate("@" + str(r._json["user"]["screen_name"]) + str(answer))
-                    print (status)
-                    print(r._json["id"])
-                    print("Sent a reply!")
-                #here checks for replies and answers if necessary
-                t[3] = getAwareTime(datetime.now())
+                            answer = answerGenerator(movie, r._json["user"]["screen_name"], backend.answer_checker(t, str(r._json["text"]).replace("@ThatOldMovieGu1 ","").strip()))
+                            status = api.PostUpdate("@" + str(r._json["user"]["screen_name"]) + " " + str(answer), in_reply_to_status_id=r._json["id"])
+                            print (status)
+                            print(r._json["id"])
+                            print("Sent a reply!")
+                    db.change_tweet_last_updated(i,str(getAwareTime(datetime.now())))
 
             last_reply_check_time = datetime.now()
 
@@ -110,11 +139,16 @@ def getReplies(tweet_id):
     replies = api.GetSearch(raw_query="q=to%3AThatOldMovieGu1&since_id="+str(tweet_id)+"&")
     reply_list = []
     for t in replies:
-        if t._json["in_reply_to_status_id"] ==tweet_id:
+        if t._json["in_reply_to_status_id"] == tweet_id:
             reply_list.append(t)
 
     return reply_list
 
+def noReplies(movie_name):
+    answer = random.choice(["The quote was actually from a movie called ", "The movie in question was ", "The quote was from the movie ", ]) \
+             + movie_name + \
+             random.choice([". I'll try to make it easier next time", ". I guess it wan't as obvious as I thought"])
+    return answer
 
 def makeReplies(tweet_id, checkAnswer):
     replies = getReplies(tweet_id)
@@ -136,7 +170,8 @@ def makeReplies(tweet_id, checkAnswer):
 
     # If the user replies a nonexistent movie or replies in gibberish
     if checkAnswer == 2:
-        answer = "Sorry but I don't know this movie", "Is this an actual movie?", "That doesnt sound familiar", "I think you've made a typo"
+        answer = random.choice(
+            ["Sorry but I don't know this movie", "Is this an actual movie?", "That doesnt sound familiar", "I think you've made a typo"])
 
     return answer
 
@@ -173,7 +208,8 @@ def answerGenerator(correctAnswer, user, checkAnswer):
 
     # If the user replies a nonexistent movie or replies in gibberish
     if checkAnswer == 0:
-        answer = "Sorry but I don't know this movie", "Is this an actual movie?", "That doesnt sound familiar", "I think you've made a typo"
+        answer = random.choice(
+            ["Sorry but I don't know this movie", "Is this an actual movie?", "That doesnt sound familiar", "I think you've made a typo"])
 
     return answer
 
@@ -205,3 +241,9 @@ twitterBot()
 
 # new_quote, quote_id = db.get_random_quote_data()
 # print (new_quote["Quote"])
+
+# ot = db.get_open_tweets()
+# print (type (ot))
+# for t in ot:
+#     print (ot[t])
+#     print (type(t))
