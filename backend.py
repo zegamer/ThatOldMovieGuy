@@ -99,7 +99,7 @@ def movie_hint(quote_id):
 
 def answer_checker(tweet_id, movie_name):
     """
-    check answers and identifies if the movie is the correct one, in the list, or is incorrect.
+    Check answers and identifies if the movie is the correct one, in the list, or is incorrect.
 
     PARAMETERS
     ------------

@@ -233,7 +233,7 @@ def change_tweet_hint_status(tweet_id, status):
 
 def change_tweet_last_updated(tweet_id, status):
     """
-    Alters the last_updated time of a tweet
+    Alters the last_updated time of a tweet.
 
     PARAMETERS
     ------------
