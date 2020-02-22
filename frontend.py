@@ -109,7 +109,7 @@ def twitterBot():
             # previous_tweet_list.append ([api.GetStatus(1230969409587556352),"hello",0,getAwareTime(datetime.now())])
             open_tweets = db.get_open_tweets()
             # print (open_tweets)
-            if open_tweets== 0:
+            if open_tweets:
                 for t in open_tweets:
                    checkReply(t, open_tweets)
             last_reply_check_time = datetime.now()
