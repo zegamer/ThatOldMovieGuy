@@ -117,13 +117,19 @@ def twitterBot():
 def checkReply(t,open_tweets):
     # print ("Check replies " + str(t))
     replies = getReplies(t)
+    db.change_tweet_last_updated(t, str(getAwareTime(datetime.now())))
     for r in replies:
         # print ("reply")
         # print (r)
         tweet_time_str = r._json["created_at"]
         tweet_time = datetime.strptime(tweet_time_str, '%a %b %d %H:%M:%S %z %Y')
         open_tweet_time = datetime.fromisoformat(open_tweets[t]["last_updated"])
+
+        # print (open_tweet_time < tweet_time)
+        # print (open_tweet_time)
+        # print (tweet_time)
         if (open_tweet_time < tweet_time and r._json["user"]["screen_name"] != "ThatOldMovieGu1"):
+            print (r)
             quote_data = db.get_quote_data_from_tweet(t)
             movie = quote_data['Movie']
             correctness = backend.answer_checker(t, str(r._json["text"]).replace("@ThatOldMovieGu1 ", "").strip())
@@ -131,7 +137,7 @@ def checkReply(t,open_tweets):
             answer = answerGenerator(movie, r._json["user"]["screen_name"], int(correctness))
             # print (movie)
             # print (r._json["user"]["screen_name"])
-            # print (answer)
+            print (answer)
             # print (r._json["id"])
             status = api.PostUpdate("@" + str(r._json["user"]["screen_name"]) + " " + str(answer), in_reply_to_status_id=r._json["id"])
 
@@ -148,8 +154,6 @@ def checkReply(t,open_tweets):
                 db.change_tweet_open_status(t)
                 print ("tweet deleted")
                 return
-
-    db.change_tweet_last_updated(t, str(getAwareTime(datetime.now())))
 
 
 #return timezone aware time stamp
