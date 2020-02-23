@@ -174,7 +174,8 @@ def push_tweet_in_db(tweet_id, quote_id, time_posted):
             "quote_id": quote_id,
             "time_posted": time_posted,
             "hint_status": False,
-            "last_updated": time_posted
+            "last_updated": time_posted,
+            "tweet_counter": 0
         }
         fdb.child('open_tweets').child(tweet_id).set(data)
         return True
@@ -255,3 +256,30 @@ def change_tweet_last_updated(tweet_id, status):
         print(e)
         return False
 
+
+def tweet_within_response_limit(tweet_id):
+    """
+    Increments tweet_counter value of a tweet provided it is within response_limit.
+
+    PARAMETERS
+    ------------
+    :param tweet_id: int
+        posted tweet's tweet id
+
+    RETURNS
+    ------------
+    :return: boolean
+        True if successful, False otherwise
+    """
+
+    try:
+        response_limit = __get_item("response_limit")
+        tweet_counter = __get_item("open_tweets/" + str(tweet_id) + "/tweet_counter")
+        if tweet_counter < response_limit:
+            fdb.child('open_tweets').child(tweet_id).update({'tweet_counter': tweet_counter + 1})
+        else:
+            raise Exception("Response limit reached")
+        return True
+    except Exception as e:
+        print(e)
+        return False
