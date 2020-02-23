@@ -19,8 +19,7 @@ That Old Movie Guy is a twitterbot made by 4 students for a course at the Univer
 This twitterbot requires Python 3.7 [[Download]] to work.
 
 #### Cloning repository
-Either download from [here] or use the git shell 
-> Terminal will prompt for your username and password
+Either download from [here] or use the git shell.  
 ```sh
 $ git clone https://github.com/zegamer/Fdt-ITech-Twitterbot.git
 ```
@@ -32,12 +31,15 @@ $ pip install -r requirements.txt
 ```
 
 #### Changing API keys and secrets
-Open config.ini in a text editor.
-Replace xxxxx with your API keys.
-You can find instructions for [Twitter API]
+- Open config.ini in a text editor.
+- Replace xxxxx with your API keys.
+- You can find instructions for [Twitter API]
 
 #### Running the program
-
+```sh
+$ cd Fdt-ITech-Twitterbot-master
+$ python frontend.py
+```
 
 
 ### Todos
@@ -48,10 +50,8 @@ You can find instructions for [Twitter API]
 
 
 ## License
-----
 
-
-The code is **open source** under MIT Licence.
+The code is **open source** under MIT Licence.  
 Check licence file in the repository.
 
 For further questions, you can reach at m.v.konda@student.utwente.nl
