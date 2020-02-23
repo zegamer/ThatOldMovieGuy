@@ -1,3 +1,3 @@
 # Fdt-ITech-Twitterbot
 
-> Yet to make it complete
+Run frontend.py to run the program.
