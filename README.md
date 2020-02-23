@@ -33,7 +33,8 @@ $ pip install -r requirements.txt
 #### Changing API keys and secrets
 - Open config.ini in a text editor.
 - Replace xxxxx with your API keys.
-- You can find instructions for [Twitter API]
+- For Twitter, you can find instructions [Twitter API]
+- For Firebase, for [registering] then [api keys]
 
 #### Running the program
 ```sh
@@ -65,4 +66,6 @@ For further questions, you can reach at m.v.konda@student.utwente.nl
 [QuoDB]: <http://www.quodb.com>
 [Python twitter]: <https://python-twitter.readthedocs.io/en/latest/>
 [here]: <https://github.com/zegamer/Fdt-ITech-Twitterbot.git>
-[Twitter API]: <https://developer.twitter.com>
+[Twitter API]: <https://learn.g2.com/how-to-make-a-twitter-bot>
+[registering]: <https://firebase.google.com/docs/web/setup?authuser=1>
+[api keys]: <https://firebase.google.com/docs/database/rest/start?authuser=1>
