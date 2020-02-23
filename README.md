@@ -50,7 +50,7 @@ $ python frontend.py
  - Add movie metadata to produce efficient hints
 
 
-## License
+## Licence
 
 The code is **open source** under MIT Licence.  
 Check licence file in the repository.
