@@ -128,7 +128,7 @@ def answer_checker(tweet_id, movie_name):
     if correct_movie == movie_name:
         return 1
     elif correctness >= 70:
-        return 2, correct_movie
+        return 2  # , correct_movie
     elif movie_matcher(movie_list, movie_name):
         return 3
     elif 40 < correctness < 70:
