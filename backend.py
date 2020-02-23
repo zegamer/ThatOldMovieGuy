@@ -111,11 +111,11 @@ def answer_checker(tweet_id, movie_name):
     RETURNS
     ------------
     :return: int, str
-        Returns (1) if user enters exact movie name
-        Returns (2, correct movie name) if movie name is 50% true
-        Returns (3) if quote exists in another movie
-        Returns (4) if some words match but isn't correct
-        Returns (0) if it is entirely wrong
+        Returns 1 if user enters exact movie name
+        2 if movie name is 50% true
+        3 if quote exists in another movie
+        4 if some words match but isn't correct
+        0 if it is entirely wrong
     """
 
     quote_data = db.get_quote_data_from_tweet(tweet_id)
