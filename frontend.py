@@ -17,13 +17,6 @@ api = twitter.Api(consumer_key=cfg['twitterAuth']['consumer_key'],
                   access_token_key=cfg['twitterAuth']['access_token_key'],
                   access_token_secret=cfg['twitterAuth']['access_token_secret'])
 
-
-# #Api Keys added
-# api = twitter.Api(consumer_key='77fIyHnx653Nnx0W4Iz4XRua9',
-#                   consumer_secret='rG0FQNYliP2jlab2Nf0VYm83a3iC0UUFmyOetHd8aaD4nSa4aE',
-#                   access_token_key='1227546694969167873-6Feip4gF0vg0DJxN38yLWCrPIVNYVt',
-#                   access_token_secret='rOozbozQIqpy5JonuSrlkxq7d4NXSeIjhUCjtotVgZeHJ')
-
 #Timing variables
 posting_frequency = 300 #makes post every $posting_frequency$ seconds
 last_tweet_time = datetime.now() - timedelta(seconds=posting_frequency+100)

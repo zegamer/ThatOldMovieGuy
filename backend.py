@@ -122,7 +122,9 @@ def answer_checker(tweet_id, movie_name):
     quote = quote_data['Quote']
     correct_movie = quote_data['Movie']
     movie_list = get_all_movies_from_quote(quote)
-    correctness = fuzz.ratio(correct_movie, movie_name)
+    correct_movie_check = correct_movie.lower().capitalize().translate(str.maketrans('', '', punctuation))
+    movie_name_check = movie_name.lower().capitalize().translate(str.maketrans('', '', punctuation))
+    correctness = fuzz.ratio(correct_movie_check, movie_name_check)
     if correct_movie == movie_name:
         return 1
     elif correctness >= 70:

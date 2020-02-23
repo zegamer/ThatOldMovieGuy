@@ -34,6 +34,8 @@ try:
 except Exception as ex:
     print(ex)
 
+# GET Functions
+
 
 def __get_item(reference):
     """
@@ -151,6 +153,9 @@ def get_open_tweets():
         return False
 
 
+# SET Functions
+
+
 def push_tweet_in_db(tweet_id, quote_id, time_posted):
     """
     Pushes a new tweet into the database
@@ -182,6 +187,9 @@ def push_tweet_in_db(tweet_id, quote_id, time_posted):
     except Exception as e:
         print(e)
         return False
+
+
+# UPDATE Functions
 
 
 def change_tweet_open_status(tweet_id):
@@ -283,3 +291,4 @@ def tweet_within_response_limit(tweet_id):
     except Exception as e:
         print(e)
         return False
+
