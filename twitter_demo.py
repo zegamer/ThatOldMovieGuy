@@ -176,30 +176,7 @@ def noReplies(movie_name):
              random.choice([". I'll try to make it easier next time", ". I guess it wan't as obvious as I thought"])
     return answer
 
-def makeReplies(tweet_id, checkAnswer):
-    replies = getReplies(tweet_id)
-    user = ""
-    for t in replies:
-        user = t._json["user"]["screen_name"]
 
-    # If the user answer correctly
-    if checkAnswer == 1:
-        answer = random.choice(
-            ["It was indeed, " + "<movie name>", "Congratulations @" + str(user) + ", you are indeed correct", "BINGO!",
-             "Cheers to @" + str(user) + ", for solving the quote."])
-
-    # If the user answer incorrectly
-    if checkAnswer == 0:
-        answer = random.choice(
-            ['This was not what I had in mind, ', 'Not exactly bucko,', 'Nice try kiddo, ']) + random.choice(["you are welcome to try again.",
-            "don't give up! It's not that hard.", "just think over it for a minute.", "don’t overthink it just try again."])
-
-    # If the user replies a nonexistent movie or replies in gibberish
-    if checkAnswer == 2:
-        answer = random.choice(
-            ["Sorry but I don't know this movie", "Is this an actual movie?", "That doesnt sound familiar", "I think you've made a typo"])
-
-    return answer
 
 def generateQuoteQuestion(quote):
     Quote_of_the_Day = random.choice(["Hey there movie fans, can any of you guys figure out where this quote comes from? ",
