@@ -126,25 +126,35 @@ def answerChecker(tweet_id, checkAnswer):
         # If the user answer correctly
         if checkAnswer == 1:
             answer = random.choice(
-                ["It was indeed, " + correctAnswer, "Congratulations @" + str(user) + ", you are indeed correct", "BINGO!",
-                 "Cheers to @" + str(user) + ", for solving the quote."])
+                ["It was indeed, " + correctAnswer + ".", "Congratulations @" + str(user) + ", you are indeed correct.", "BINGO!",
+                 "Cheers to @" + str(user) + ", for solving the quote.", "Thank you @" + str(user) + ", for solving the quote."]) \
+                     + random.choice(["Come back tomorrow for another quote.", "It's nice to know that people are still watching this movie.",
+                                      "For a second there I thought no one would get it."])
 
         if checkAnswer == 2:
-            answer = random.choice(
-                ["Close but no cigar my friend", "I think they have a similar quote, but I don't think this movie was it",
-                 "Nope! but it was close", "Some words do match but that's not exactly right"])
+            answer = random.choice([random.choice(["Close but no cigar my friend.", " You are getting warmer", "That is not where the quote came from but its close"]),
+                                    random.choice(["They have something similar, ", "I think they have a similar quote, ", "That movie have similar quotes, ", "Some words do match, "]) \
+                                    + random.choice([" but I don't think this movie was it.", " but not exactly what I was going for."]) \
+                                    + random.choice(["Don't give up!", "It's not that hard.", "At least that's one movie off the list",
+                                                    " ", " you can do this, I believe in you kid", " keep calm and try again"])
+                                    ])
 
 
         # If the user answer incorrectly
         if checkAnswer == 3:
-            answer = random.choice(
-                ['This was not what I had in mind, ', 'Not exactly bucko,', 'Nice try kiddo, ']) + random.choice(["you are welcome to try again.",
-                "don't give up! It's not that hard.", "just think over it for a minute.", "don’t overthink it just try again."])
+            answer = random.choice(['This was not what I had in mind, ', 'Not exactly bucko,', 'Nice try kiddo, ']) \
+                     + random.choice(["you are welcome to try again.", "just think over it for a minute.",
+                                      "don’t over think it just try again.", "nice try though."]) \
+                     + random.choice([" Don't give up!", " It's not that hard.", " At least that's one movie off the list",
+                                      " ", " you can do this, I believe in you kid", " keep calm and try again"])
 
         # If the user replies a nonexistent movie or replies in gibberish
         if checkAnswer == 0:
-            answer = "Sorry but I don't know this movie", "Is this an actual movie?", "That doesnt sound familiar", "I think you've made a typo"
-
+            answer = random.choice(["Sorry but I don't know this movie", "Is this an actual movie?",
+                                     "Is this a cult classic?", "Is this a new movie?"]) \
+                     + random.choice(["because I've never heard of it before.", "that doesnt sound familiar.",
+                                      "I don't think I'm familiar with this movie."]) \
+                     + random.choice(["Nice try though.", "I'll put in the list.", "Don't give up just yet though"])
     return answer
 
 # def makeReply (tweet_id, user_answer):
@@ -152,15 +162,20 @@ def answerChecker(tweet_id, checkAnswer):
 
 
 def generateQuoteQuestion():
-    Quote_of_the_Day = random.choice(["Hey there movie fans, can any of you guys figure out where this quote comes from? ",
-                                      "I have this quote stuck in my head, can someone help me? ", "Can you guess where this quote came from? ",
-                                      "Can someone help me find out where this quote is from? "]) + "Quote: " + quote
+    Quote_of_the_Day = random.choice(["Hey there movie fans,", " Hey guys,",
+                                      "I have this quote stuck in my head,",
+                                      "Quote time," "Here's a question for you all,"]) \
+                       + random.choice([" can any of you guys figure out where this quote comes from? ",
+                                        " can you guess where this quote came from? ",
+                                        " can someone please help me find out where this quote is from? "
+                                        " where did this quote come from? "]) \
+                       + random.choice(["Quote: ", "Line: ", " "]) + quote
     return Quote_of_the_Day
 
 def noReplies(movie_name):
-    answer = random.choice(["The quote was actually from a movie called ", "The movie in question was ", "The quote was from the movie", ]) \
+    answer = random.choice(["The quote was actually from a movie called ", "The movie in question was ", "The quote was from the movie ", "Its from "]) \
              + movie_name + \
-             random.choice(["Ill try to make it easier next time", "I guess it wan't as obvious as I thought"])
+             random.choice([". Ill try to make it easier next time", ". I guess it wan't as obvious as I thought", ". I guess this line is not as famous as I thought"])
     return answer
 
 def hint():
