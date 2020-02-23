@@ -125,37 +125,45 @@ def answerChecker(tweet_id, checkAnswer):
     else:
         # If the user answer correctly
         if checkAnswer == 1:
-            answer = random.choice(
-                ["It was indeed, " + correctAnswer + ".", "Congratulations @" + str(user) + ", you are indeed correct.", "BINGO!",
-                 "Cheers to @" + str(user) + ", for solving the quote.", "Thank you @" + str(user) + ", for solving the quote."]) \
+            answer = random.choice("BINGO!",
+                                   [random.choice(["It was indeed, " + correctAnswer + "."]),
+                                    random.choice(["Congratulations @" + str(user),
+                                                   "Cheers to @" + str(user),
+                                                   "Thank you @" + str(user)])
+                                            + random.choice([", you are indeed correct.", ", for solving the quote.", " "])]) \
                      + random.choice(["Come back tomorrow for another quote.", "It's nice to know that people are still watching this movie.",
-                                      "For a second there I thought no one would get it."])
-
+                                       "For a second there I thought no one would get it."])
+        # If the user is 70% correct
         if checkAnswer == 2:
-            answer = random.choice([random.choice(["Close but no cigar my friend.", " You are getting warmer", "That is not where the quote came from but its close"]),
+            answer = random.choice(["You're right, but ", "Getting warmer.... "]) \
+                     + random.choice(["you need to be more accurate kid.", "specify!", "full title please.", "you need to be more specific."]) \
+                     + random.choice(["Just want to make sure you get it right", "I think I know where you're going but I need to make sure", "Which one?"])
+
+        # If the user found a similar quote on a different movie
+        if checkAnswer == 3:
+            answer = random.choice([random.choice(["Close but no cigar my friend. ", "That is not where the quote came from but its close.", "Not really, but I understand the confusion"]),
                                     random.choice(["They have something similar, ", "I think they have a similar quote, ", "That movie have similar quotes, ", "Some words do match, "]) \
-                                    + random.choice([" but I don't think this movie was it.", " but not exactly what I was going for."]) \
+                                    + random.choice([" but I don't think this movie was it.", " but not exactly what I was going for."])]) \
                                     + random.choice(["Don't give up!", "It's not that hard.", "At least that's one movie off the list",
                                                     " ", " you can do this, I believe in you kid", " keep calm and try again"])
-                                    ])
-
 
         # If the user answer incorrectly
-        if checkAnswer == 3:
+        if checkAnswer == 0:
             answer = random.choice(['This was not what I had in mind, ', 'Not exactly bucko,', 'Nice try kiddo, ']) \
                      + random.choice(["you are welcome to try again.", "just think over it for a minute.",
                                       "don’t over think it just try again.", "nice try though."]) \
                      + random.choice([" Don't give up!", " It's not that hard.", " At least that's one movie off the list",
                                       " ", " you can do this, I believe in you kid", " keep calm and try again"])
 
-        # If the user replies a nonexistent movie or replies in gibberish
-        if checkAnswer == 0:
-            answer = random.choice(["Sorry but I don't know this movie", "Is this an actual movie?",
-                                     "Is this a cult classic?", "Is this a new movie?"]) \
-                     + random.choice(["because I've never heard of it before.", "that doesnt sound familiar.",
-                                      "I don't think I'm familiar with this movie."]) \
-                     + random.choice(["Nice try though.", "I'll put in the list.", "Don't give up just yet though"])
     return answer
+        # If the user replies a nonexistent movie or replies in gibberish
+        # if checkAnswer == 0:
+        #     answer = random.choice(["Sorry but I don't know this movie", "Is this an actual movie?",
+        #                              "Is this a cult classic?", "Is this a new movie?"]) \
+        #              + random.choice(["because I've never heard of it before.", "that doesnt sound familiar.",
+        #                               "I don't think I'm familiar with this movie."]) \
+        #              + random.choice(["Nice try though.", "I'll put in the list.", "Don't give up just yet though"])
+
 
 # def makeReply (tweet_id, user_answer):
 
