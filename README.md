@@ -55,7 +55,7 @@ $ python frontend.py
 The code is **open source** under MIT Licence.  
 Check licence file in the repository.
 
-For further questions, you can reach at m.v.konda@student.utwente.nl
+For further questions, you can reach at mak17593@outlook.com
 
 [frontend.py]: #
 [Download]: <https://www.python.org/downloads/>
